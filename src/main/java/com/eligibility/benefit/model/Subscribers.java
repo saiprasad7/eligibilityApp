@@ -8,6 +8,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Data;
+
+
+//@Data
 @Document(collection="subscribers")
 public class Subscribers {
 	@Id
@@ -69,23 +73,7 @@ public class Subscribers {
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	/*public Benefit[] getBenefit() {
-		return benefit;
-	}
-	public void setBenefit(Benefit[] benefit) {
-		this.benefit = benefit;
-	}*/
-	/*public Dependents getDependents() {
-		return dependents;
-	}
-	public void setDependents(Dependents dependents) {
-		this.dependents = dependents;
-	}
-*/
-	
-	public List<Dependents> getDependents() {
-		return dependents;
-	}
+	/**/
 	public List<Benefit> getBenefits() {
 		return benefits;
 	}
@@ -95,8 +83,10 @@ public class Subscribers {
 	public void setDependents(List<Dependents> dependents) {
 		this.dependents = dependents;
 	}
-	
-	
+	public List<Dependents> getDependents() {
+		return dependents;
+	}
+
 	
 
 }

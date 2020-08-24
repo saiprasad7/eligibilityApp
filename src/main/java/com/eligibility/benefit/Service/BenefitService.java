@@ -2,22 +2,31 @@ package com.eligibility.benefit.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org. springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.eligibility.benefit.Repo.PolicyRepository;
 import com.eligibility.benefit.Repo.SubscriberRepo;
 import com.eligibility.benefit.Repo.SubscriberRepository;
 import com.eligibility.benefit.model.Benefit;
 import com.eligibility.benefit.model.Dependents;
+import com.eligibility.benefit.model.Policies;
 import com.eligibility.benefit.model.Subscribers;
+
+import lombok.Getter;
+import lombok.Setter;
+
 
 @Service
 public class BenefitService {
 	
 	@Autowired
 	SubscriberRepository subscriberRepo;
+	@Autowired
+	PolicyRepository policyRepository;
 	
 	public List<Subscribers> findAll(){
 		System.out.println("-----get mapping ***-");
@@ -25,6 +34,7 @@ public class BenefitService {
 	}
 
 	public boolean addSubscribers(Subscribers subscribers) {
+		
 		Subscribers subscriber=new Subscribers();
 	   List<Benefit> benefitList= new ArrayList();
 	   List <Dependents> dependentList=new ArrayList();
@@ -41,12 +51,13 @@ public class BenefitService {
 		subscriber.setEmail(subscribers.getEmail());
 		subscriber.setPassword(subscribers.getPassword());
 		subscriber.setDateOfBirth(subscribers.getDateOfBirth());
+		Optional<Policies> policy=policyRepository.findByPolicyId((subscribers.getBenefits().get(0).getPolicyId()));
 		//benefit.setId(new ObjectId(subscribers.getBenefits().get(0).getId()).toString());
-		benefit.setId(subscribers.getBenefits().get(0).getId());
-		benefit.setPolicyId(subscribers.getBenefits().get(0).getPolicyId());
-		benefit.setPolicyBenefits(subscribers.getBenefits().get(0).getPolicyBenefits());
-		benefit.setPolicyName(subscribers.getBenefits().get(0).getPolicyName());
-		benefit.setTotalEligibleAmount(subscribers.getBenefits().get(0).getTotalEligibleAmount());
+		benefit.setId(policy.get().getId());
+		benefit.setPolicyId(policy.get().getPolicyId());
+		benefit.setPolicyBenefits(policy.get().getPolicyBenefits());
+		benefit.setPolicyName(policy.get().getPolicyName());
+		benefit.setTotalEligibleAmount(policy.get().getClaimableAmount());
 		benefit.setClaimedAmount(subscribers.getBenefits().get(0).getClaimedAmount());
 		benefit.setCurrentEligibleAmount(subscribers.getBenefits().get(0).getCurrentEligibleAmount());
 		benefitList.add(benefit);		

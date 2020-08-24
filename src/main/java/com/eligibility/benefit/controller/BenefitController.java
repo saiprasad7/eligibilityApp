@@ -31,18 +31,15 @@ public class BenefitController {
 	}
 	
 	
-//	@GetMapping(path="/get")
 	@RequestMapping("/get")
 	public List getSubscribersList() {
 		System.out.println("-----get mapping---");
 		return benefitService.findAll();
 	}
 	
-//	@RequestMapping("/getBenefitService")
 	@PostMapping(path="/getBenefitService",consumes = "application/json")
 	public boolean addSubscriberslist(@RequestBody Subscribers subscribers) {
 		System.out.println("-----get mapping---");
-		System.out.println("get valuealue"+subscribers.getEmail()+subscribers.getPassword()+subscribers.getDateOfBirth());
 		return benefitService.addSubscribers(subscribers);
 	}
 	
