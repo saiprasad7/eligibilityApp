@@ -9,23 +9,23 @@ import com.eligibility.benefit.Repo.CascadeSave;
 
 public class Benefit {
 
-	@DBRef(db="policies")
+//	@DBRef(db="policies")
 	//@JoinColumn(name = "policies_id", nullable = false)
 	 @CascadeSave
-	@Id
-	 @Field("id")
+//	@Id
+//	 @Field("id")
 	private String id;
-	@DBRef(db="policies")
+	//@DBRef(db="policies")
 	//@CascadeSave
 	private String policyId;
-	@DBRef(db="policies")
-	@CascadeSave
+//	@DBRef(db="policies")
+//	@CascadeSave
 	private String policyName;
-	@DBRef(db="policies")
-	@CascadeSave
+//	@DBRef(db="policies")
+//	@CascadeSave
 	private String policyBenefits;
-	@DBRef(db="policies")
-	@CascadeSave
+//	@DBRef(db="policies")
+//	@CascadeSave
 	private long totalEligibleAmount;
 	private int claimedAmount;
 	private long currentEligibleAmount;
