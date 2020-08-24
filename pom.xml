@@ -11,7 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>BenefitDet</artifactId>
 	<version>Benefit</version>
-	<name>BenefitDet</name>
+	<name>eligibility</name>
 	<description>Demo project for Spring Boot</description>
 <packaging>jar</packaging>
 
@@ -33,7 +33,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency> -->
-
+		<dependency>
+               <groupId>org.projectlombok</groupId>
+               <artifactId>lombok</artifactId>
+                <scope>provided</scope>
+                <!-- <version>1.18.12</version> -->
+        </dependency>
+        <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -48,6 +58,7 @@
 	</dependencies>
 
 	<build>
+	<finalName>${project.name}-app</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
