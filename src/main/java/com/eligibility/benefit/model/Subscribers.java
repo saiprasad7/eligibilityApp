@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
 
-//@Data
+@Data
 @Document(collection="subscribers")
 public class Subscribers {
 	@Id
@@ -31,7 +31,7 @@ public class Subscribers {
    private List<Benefit> benefits;
 	
 	private List<Dependents> dependents;
-	public String getId() {
+	/*public String getId() {
 		return id;
 	}
 	public void setId(String id) {
@@ -73,7 +73,7 @@ public class Subscribers {
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	/**/
+	
 	public List<Benefit> getBenefits() {
 		return benefits;
 	}
@@ -88,5 +88,5 @@ public class Subscribers {
 	}
 
 	
-
+*/
 }

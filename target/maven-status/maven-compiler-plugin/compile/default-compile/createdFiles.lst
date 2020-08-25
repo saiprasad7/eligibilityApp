@@ -1,12 +1,13 @@
 com\eligibility\benefit\Repo\CascadeSave.class
 com\eligibility\benefit\controller\BenefitController.class
 com\eligibility\benefit\model\Subscribers.class
-com\eligibility\benefit\model\DependentAddress.class
 com\eligibility\benefit\Repo\SubscriberRepo.class
 com\eligibility\benefit\Repo\SubscriberRepository.class
 com\eligibility\benefit\BenefitDetApplication.class
 com\eligibility\benefit\model\Name.class
 com\eligibility\benefit\model\Benefit.class
+com\eligibility\benefit\Service\SubscriberService.class
+com\eligibility\benefit\controller\SubscriberController.class
 com\eligibility\benefit\model\Address.class
 com\eligibility\benefit\model\Dependents.class
 com\eligibility\benefit\Repo\PolicyRepository.class

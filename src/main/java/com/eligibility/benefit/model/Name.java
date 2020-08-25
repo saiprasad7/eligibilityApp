@@ -1,12 +1,15 @@
 package com.eligibility.benefit.model;
 
+import lombok.Data;
+
+@Data
 public class Name {
 	
 	private String firstName;
 	private String lastName;
 	
 
-	public Name() {
+	/*public Name() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -25,7 +28,7 @@ public class Name {
 	@Override
 	public String toString() {
 		return "Name [firstName=" + firstName + ", lastName=" + lastName + "]";
-	}
+	}*/
 	
 	
 

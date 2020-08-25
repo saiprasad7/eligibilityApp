@@ -1,12 +1,15 @@
 package com.eligibility.benefit.model;
 
+import lombok.Data;
+
+@Data
 public class Address {
 	
 	private String street;
 	private String city;
 	private String state;
 	private String country;
-	public Address() {
+	/*public Address() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -38,6 +41,6 @@ public class Address {
 	public String toString() {
 		return "Address [street=" + street + ", city=" + city + ", state=" + state + ", country=" + country + "]";
 	}
-	
+*/	
 
 }

@@ -9,6 +9,6 @@ import com.eligibility.benefit.model.Policies;
 public interface PolicyRepository extends MongoRepository<Policies, Long> {
 
 
-	Optional<Policies> findByPolicyId(String string);
+	Policies findByPolicyId(String string);
 
 }

@@ -3,7 +3,9 @@ package com.eligibility.benefit.model;
 import java.util.Date;
 import java.util.List;
 
+import lombok.Data;
 
+@Data
 public class Dependents {
 
 	
@@ -14,6 +16,7 @@ public class Dependents {
 	//private Benefit[] dependentbenefit=new Benefit[1];
 
 	private List<Benefit> dependentBenefits;
+	/*
 	public String getDependentId() {
 		return dependentId;
 	}
@@ -58,5 +61,5 @@ public class Dependents {
 	}
 	
 	
-	
+*/	
 }
