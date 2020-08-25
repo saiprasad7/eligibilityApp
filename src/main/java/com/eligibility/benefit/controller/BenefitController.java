@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eligibility.benefit.Service.BenefitService;
 import com.eligibility.benefit.model.Benefit;
+import com.eligibility.benefit.model.EligibilityCheck;
 import com.eligibility.benefit.model.Policies;
 import com.eligibility.benefit.model.Subscribers;
 
@@ -46,6 +47,12 @@ public class BenefitController {
 	public Policies getBenefit(@RequestParam String policyId) {
 		System.out.println("-----get mapping---");
 		return benefitService.getBenefitService(policyId);
+	}
+	
+	@GetMapping(path="/getBenefits",produces = "application/json")
+	public EligibilityCheck getBenefit(@RequestParam String policyId,String uniqueId,String plan ) {
+		System.out.println("-----get mapping---");
+		return benefitService.getEligibility(policyId, uniqueId, plan);
 	}
 	
 }

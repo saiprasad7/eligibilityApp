@@ -13,6 +13,7 @@ import com.eligibility.benefit.model.Subscribers;
 public interface SubscriberRepository extends MongoRepository<Subscribers, Long> {
 	
 	List<Subscribers>findAll();
+	Subscribers findBySubscriberId(String subscribers);
 		// TODO Auto-generated method stub
 
 	//void saveAll(Subscribers subscriber, Benefit benefit, Dependents dependents);
