@@ -2,6 +2,7 @@ D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\bene
 D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\benefit\controller\SubscriberController.java
 D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\benefit\BenefitDetApplication.java
 D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\benefit\model\Address.java
+D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\benefit\model\EligibilityCheck.java
 D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\benefit\model\Policies.java
 D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\benefit\model\Name.java
 D:\workspace\SpringBoot_poc_basics\BenefitDet\src\main\java\com\eligibility\benefit\Service\BenefitService.java

@@ -45,14 +45,18 @@ public class BenefitController {
 	
 	@GetMapping(path="/getBenefitService",produces = "application/json")
 	public Policies getBenefit(@RequestParam String policyId) {
-		System.out.println("-----get mapping---");
+	//	System.out.println("-----get mapping---");
 		return benefitService.getBenefitService(policyId);
 	}
 	
 	@GetMapping(path="/getBenefits",produces = "application/json")
 	public EligibilityCheck getBenefit(@RequestParam String policyId,String uniqueId,String plan ) {
-		System.out.println("-----get mapping---");
+	//	System.out.println("-----get mapping---");
 		return benefitService.getEligibility(policyId, uniqueId, plan);
 	}
 	
+	@GetMapping(path="/getAllPolicies",produces = "application/json")
+	public List<Policies> getAllPolicies() {
+		return benefitService.getAllPolicies();
+	}
 }

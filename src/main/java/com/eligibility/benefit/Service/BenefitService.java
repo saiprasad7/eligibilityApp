@@ -64,4 +64,9 @@ public class BenefitService {
 	return eligible;
 	}
 
+	public List<Policies> getAllPolicies() {
+		// TODO Auto-generated method stub
+		return policyRepository.findAll();
+	}
+
 }
