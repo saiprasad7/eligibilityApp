@@ -15,7 +15,4 @@ public class EligibilityCheck {
 	private Long totalEligibleAmount;
 	private Long currentEligibleAmount;
 	
-	
-
-
 }
