@@ -13,7 +13,7 @@ import com.eligibility.benefit.model.Policies;
 public class PoliciesService {
 
 	@Autowired
-	PolicyRepository policyRepository;
+	private PolicyRepository policyRepository;
 
 	public Policies getPolicyDetails(String policyId) {
 		Policies policy=policyRepository.findByPolicyId(policyId);

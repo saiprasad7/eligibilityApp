@@ -16,7 +16,7 @@ import com.eligibility.benefit.model.Subscribers;
 public class SubscriberService {
 
 	@Autowired
-	SubscriberRepository subscriberRepository;
+	private SubscriberRepository subscriberRepository;
 
 	@Autowired
 	private PoliciesService policiesService;

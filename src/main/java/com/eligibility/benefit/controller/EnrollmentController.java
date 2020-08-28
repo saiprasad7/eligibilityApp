@@ -18,7 +18,7 @@ import com.eligibility.benefit.model.Subscribers;
 public class EnrollmentController {
 	
 	@Autowired
-	SubscriberService subscriberService;
+	private SubscriberService subscriberService;
 	
 	@Autowired
 	private PoliciesService policiesService;
