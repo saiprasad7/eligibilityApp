@@ -2,10 +2,14 @@ package com.eligibility.benefit.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 
+@JsonInclude(JsonInclude.Include.NON_ABSENT) 
 @Data
 public class EligibilityCheck {
+	
 	
 	private String subscriberId;
 	private String uniqueId;
