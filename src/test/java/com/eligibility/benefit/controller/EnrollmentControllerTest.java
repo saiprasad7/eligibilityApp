@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
 import com.eligibility.benefit.Service.PoliciesService;
 import com.eligibility.benefit.Service.SubscriberService;
@@ -30,10 +31,10 @@ public class EnrollmentControllerTest {
 	private Subscribers subscribers;
 	
 	@Mock
-	private Policies policies;
+	private ResponseEntity<Object> policies;
 	
 	@Mock
-	private List<Policies> policyList;
+	private ResponseEntity<Object> policyList;
 
 	@Before
 	public void setUp() throws Exception {

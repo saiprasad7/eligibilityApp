@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.eligibility.benefit.Repo.PolicyRepository;
 import com.eligibility.benefit.model.Policies;
+import com.eligibility.benefit.util.LoggerUtil;
 
 
 @Service
@@ -19,14 +20,14 @@ public class PoliciesService {
 	private PolicyRepository policyRepository;
 
 	public Policies getPolicyDetails(String policyId) {
-		logger.info("get the policy id"+policyId);
+		LoggerUtil.infoLog(logger,"get the policy id"+policyId);
 		Policies policy=policyRepository.findByPolicyId(policyId);
-		logger.info("Getting policy information");
+		LoggerUtil.infoLog(logger,"Getting policy information");
 		return policy;
 	}
 
 	public List<Policies> getAllPolicies() {
-		logger.info("call all policies in service before findAll");
+		LoggerUtil.infoLog(logger,"call all policies in service before findAll");
 		return policyRepository.findAll();
 	}
 

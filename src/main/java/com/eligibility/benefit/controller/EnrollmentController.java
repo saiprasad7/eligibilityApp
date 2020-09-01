@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,8 @@ import com.eligibility.benefit.Service.PoliciesService;
 import com.eligibility.benefit.Service.SubscriberService;
 import com.eligibility.benefit.model.Policies;
 import com.eligibility.benefit.model.Subscribers;
+import com.eligibility.benefit.util.LoggerUtil;
+import com.eligibility.benefit.util.ResponseHandlingUtil;
 
 @RestController
 public class EnrollmentController {
@@ -29,19 +32,20 @@ public class EnrollmentController {
 
 	@PostMapping(path="/enrollment",consumes = "application/json")
 	public String addSubscriberslist(@RequestBody Subscribers subscribers) {
-		logger.info("calling enrollment API");
+		LoggerUtil.infoLog(logger, "calling enrollment API");
 		return subscriberService.addSubscribers(subscribers);
-	}	
+	}
 	
 	@GetMapping(path="/getPolicyDetails",produces = "application/json")
-    public Policies getPolicyDetails(@RequestParam String policyId) {
-		logger.info("calling getPolicyDetails API");
-        return policiesService.getPolicyDetails(policyId);
+	 public ResponseEntity<Object> getPolicyDetails(@RequestParam String policyId) {
+		LoggerUtil.infoLog(logger,"calling getPolicyDetails API");
+		return ResponseHandlingUtil.prepareResponse(policiesService.getPolicyDetails(policyId));
     }
 	
+  
 	@GetMapping(path="/getAllPolicies",produces = "application/json")
-	public List<Policies> getAllPolicies() {
-		logger.info("calling getAllPolicies API");
-		return policiesService.getAllPolicies();
+	public ResponseEntity<Object> getAllPolicies() {
+		LoggerUtil.infoLog(logger,"calling getAllPolicies API");
+		return ResponseHandlingUtil.prepareResponse(policiesService.getAllPolicies());
 	}
 }
