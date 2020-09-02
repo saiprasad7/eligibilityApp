@@ -28,8 +28,8 @@ public class SubscriberService {
 		List <Dependents> dependentList=new ArrayList();
 		Benefit benefit=new Benefit();
 		Dependents dependents=new Dependents();
-		Random random = new Random();
-		int id = random.nextInt((999999999-100)+1)+10;
+		Random random =new Random(System.currentTimeMillis());
+		int id = 1000000000 + random.nextInt(2000000000);
 		subscribers.setSubscriberId(String.valueOf(id));
 		try {
 		String email = subscribers.getEmail();
@@ -69,18 +69,20 @@ public class SubscriberService {
 		benefit.setCurrentEligibleAmount(subscribers.getBenefits().get(0).getCurrentEligibleAmount());
 		benefitList.add(benefit);		
 		subscribers.setBenefits(benefitList);
-		if(subscribers.getDependents()==null) {
-			dependentList.add(dependents);
-		} else {
-		String dependentId = subscribers.getSubscriberId().concat("0000000001");
-		dependents.setDependentId(dependentId);
-		dependents.setDependentDateOfBirth(subscribers.getDependents().get(0).getDependentDateOfBirth());
-		dependents.setDependentName(subscribers.getDependents().get(0).getDependentName());
-		dependents.setDependentAddress(subscribers.getDependents().get(0).getDependentAddress());
-		dependents.setDependentBenefits(benefitList);
-		dependentList.add(dependents);
-		subscribers.setDependents(dependentList);
-		}
+		if(subscribers.getDependents().size() > 0) {
+			if(subscribers.getDependents().get(0).getDependentName().getFirstName().isEmpty()) {
+				dependentList.add(dependents);
+			} else {
+				String dependentId = subscribers.getSubscriberId().concat("0000000001");
+				dependents.setDependentId(dependentId);
+				dependents.setDependentDateOfBirth(subscribers.getDependents().get(0).getDependentDateOfBirth());
+				dependents.setDependentName(subscribers.getDependents().get(0).getDependentName());
+				dependents.setDependentAddress(subscribers.getDependents().get(0).getDependentAddress());
+				dependents.setDependentBenefits(benefitList);
+				dependentList.add(dependents);
+				subscribers.setDependents(dependentList);
+			}
+		} 
 		subscriberRepository.save(subscribers);
 		return "Inserted Successfully";
 		
