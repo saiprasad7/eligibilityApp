@@ -69,13 +69,18 @@ public class SubscriberService {
 		benefit.setCurrentEligibleAmount(subscribers.getBenefits().get(0).getCurrentEligibleAmount());
 		benefitList.add(benefit);		
 		subscribers.setBenefits(benefitList);
-		dependents.setDependentId(subscribers.getDependents().get(0).getDependentId());
+		if(subscribers.getDependents()==null) {
+			dependentList.add(dependents);
+		} else {
+		String dependentId = subscribers.getSubscriberId().concat("0000000001");
+		dependents.setDependentId(dependentId);
 		dependents.setDependentDateOfBirth(subscribers.getDependents().get(0).getDependentDateOfBirth());
 		dependents.setDependentName(subscribers.getDependents().get(0).getDependentName());
 		dependents.setDependentAddress(subscribers.getDependents().get(0).getDependentAddress());
 		dependents.setDependentBenefits(benefitList);
 		dependentList.add(dependents);
 		subscribers.setDependents(dependentList);
+		}
 		subscriberRepository.save(subscribers);
 		return "Inserted Successfully";
 		
