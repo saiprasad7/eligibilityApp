@@ -32,24 +32,6 @@ public class SubscriberService {
 		int id = 1000000000 + random.nextInt(2000000000);
 		subscribers.setSubscriberId(String.valueOf(id));
 		try {
-		String email = subscribers.getEmail();
-		if (!isValidEmail(email)) {
-			throw new Exception("Invalid email id");
-		}
-		} catch (Exception e) {
-			 e.printStackTrace();
-			 return e.toString();
-		}
-		try {
-			String password = subscribers.getPassword();
-			if (!isValidPassword(password)) {
-				throw new Exception("Password must be at least 5 characters and at most 8 characters which contains atleast one number, upper case alphabet, lower case alphabet and special characters.");
-			}
-			} catch (Exception e) {
-				 e.printStackTrace();
-				 return e.toString();
-			}
-		try {
 			String policyId = subscribers.getBenefits().get(0).getPolicyId();
 			if ((!policyId.equals("0000000001")) && (!policyId.equals("0000000002"))
 					&& (!policyId.equals("0000000003")) && (!policyId.equals("0000000004"))) {
@@ -88,16 +70,4 @@ public class SubscriberService {
 		
 	}
 	
-	  public static boolean isValidEmail(String email) {
-	      String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-	      return email.matches(regex);
-	   }
-	  
-	  public static boolean isValidPassword(String password) {
-	      String regex = "^(?=.*[0-9])"
-                  + "(?=.*[a-z])(?=.*[A-Z])"
-                  + "(?=.*[@#$%^&+=])"
-                  + "(?=\\S+$).{5,8}$"; 
-	      return password.matches(regex);
-	   }
 }
