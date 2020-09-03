@@ -20,17 +20,9 @@ public class Subscribers {
 	
 	private Name name;
 	
-	private Address address;
-	
-	private String email;
-	
-	private String password;
-	
-	private String authenticationToken; 
-	
 	private Date dateOfBirth;
 	
-   private List<Benefit> benefits;
+	private List<Benefit> benefits;
 	
 	private List<Dependents> dependents;
 
