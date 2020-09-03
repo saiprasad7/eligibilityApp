@@ -26,5 +26,5 @@ public class Constants {
 	public static final String DAUGHTER_ID="04";
 	public static final String SON="Son";
 	public static final String SON_ID="05";
-	
+	public static final int CLAIMED_AMOUNT=0;
 }

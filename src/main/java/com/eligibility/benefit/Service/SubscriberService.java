@@ -53,8 +53,7 @@ public class SubscriberService {
 				String dependentId = null;
 				List<Benefit> allBenefitList= new ArrayList();
 				Dependents dependents=new Dependents();
-				String dependentRelation = action.getDependentRelation();
-				dependentId = generateDependentId(dependentRelation,subscribers);
+				dependentId = generateDependentId(action.getDependentRelation(),subscribers);
 				dependents.setDependentId(dependentId);
 				dependents.setDependentDateOfBirth(action.getDependentDateOfBirth());
 				dependents.setDependentName(action.getDependentName());
@@ -81,8 +80,8 @@ public class SubscriberService {
 			benefit.setPolicyBenefits(policy.getPolicyBenefits());
 			benefit.setPolicyName(policy.getPolicyName());
 			benefit.setTotalEligibleAmount(policy.getClaimableAmount());
-			benefit.setClaimedAmount(subscribers.getBenefits().get(0).getClaimedAmount());
-			benefit.setCurrentEligibleAmount(subscribers.getBenefits().get(0).getCurrentEligibleAmount());
+			benefit.setClaimedAmount(Constants.CLAIMED_AMOUNT);
+			benefit.setCurrentEligibleAmount(policy.getClaimableAmount());
 			benList.add(benefit);		
 		});
 		return benList;
