@@ -12,6 +12,7 @@ import com.eligibility.benefit.model.Benefit;
 import com.eligibility.benefit.model.Dependents;
 import com.eligibility.benefit.model.Policies;
 import com.eligibility.benefit.model.Subscribers;
+import com.eligibility.benefit.util.Constants;
 
 @Service
 public class SubscriberService {
@@ -28,12 +29,12 @@ public class SubscriberService {
 		List <Dependents> dependentList=new ArrayList();
 		//To Generate SubscriberId
 		Random random =new Random(System.currentTimeMillis());
-		int id = 1000000000 + random.nextInt(2000000000) & Integer.MAX_VALUE;
+		int id = Constants.INITIAL_ID + random.nextInt(Constants.END_ID) & Integer.MAX_VALUE;
 		subscribers.setSubscriberId(String.valueOf(id));
 		//To check Subscriber PolicyId 
 		try {
 			if(subscribers.getBenefits().isEmpty()) {
-				throw new Exception("Invalid Policy Code");
+				throw new Exception(Constants.INVALID_POLICY_CODE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,7 +68,7 @@ public class SubscriberService {
 			subscribers.setDependents(dependentList);
 		} 
 		subscriberRepository.save(subscribers);
-		return "Inserted Successfully";
+		return Constants.INSERTED_SUCCESSFULLY;
 	}
 
 	public List<Benefit> getPolicyList(List<String> policyIdList,Subscribers subscribers) {
@@ -89,16 +90,16 @@ public class SubscriberService {
 
 	public String generateDependentId(String dependentRelation,Subscribers subscribers) {
 		String dependentId = null;
-		if(dependentRelation.equalsIgnoreCase("Father")) {
-			dependentId = subscribers.getSubscriberId().concat("01");
-		} else if(dependentRelation.equalsIgnoreCase("Mother")) {
-			dependentId = subscribers.getSubscriberId().concat("02");
-		} else if(dependentRelation.equalsIgnoreCase("Spouse")) {
-			dependentId = subscribers.getSubscriberId().concat("03");
-		} else if(dependentRelation.equalsIgnoreCase("Daughter")) {
-			dependentId = subscribers.getSubscriberId().concat("04");
-		} else if(dependentRelation.equalsIgnoreCase("Son")) {
-			dependentId = subscribers.getSubscriberId().concat("05");
+		if(dependentRelation.equalsIgnoreCase(Constants.FATHER)) {
+			dependentId = subscribers.getSubscriberId().concat(Constants.FATHER_ID);
+		} else if(dependentRelation.equalsIgnoreCase(Constants.MOTHER)) {
+			dependentId = subscribers.getSubscriberId().concat(Constants.MOTHER_ID);
+		} else if(dependentRelation.equalsIgnoreCase(Constants.SPOUSE)) {
+			dependentId = subscribers.getSubscriberId().concat(Constants.SPOUSE_ID);
+		} else if(dependentRelation.equalsIgnoreCase(Constants.DAUGHTER)) {
+			dependentId = subscribers.getSubscriberId().concat(Constants.DAUGHTER_ID);
+		} else if(dependentRelation.equalsIgnoreCase(Constants.SON)) {
+			dependentId = subscribers.getSubscriberId().concat(Constants.SON_ID);
 		}
 		return dependentId;
 	}
