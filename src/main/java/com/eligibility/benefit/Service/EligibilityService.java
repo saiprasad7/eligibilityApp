@@ -68,12 +68,12 @@ public class EligibilityService {
 							});
 						}
 					});
-					if (null == eligible.getPlanCode() && false == isdependent) {
+					if (null == eligible.getPlanCode() && !isdependent) {
 						log.info("the Given dependent id is not Matched");
 						return ExceptionHandlingUtil.returnErrorObject(Constants.INVALIDDEPENDENT + uniqueId,
 								Constants.PAGE_NOT_FND);
 					}
-					if (null == eligible.getPlanCode() && false == ispolicyidnull) {
+					if (null == eligible.getPlanCode() && !ispolicyidnull) {
 						log.info("the Given Policy id is not Matched");
 						return ExceptionHandlingUtil.returnErrorObject(Constants.INVALIDPOLICY + plan,
 								Constants.PAGE_NOT_FND);
@@ -94,6 +94,8 @@ public class EligibilityService {
 				log.error("the subsciber is not eligible for the benefit", e);
 			}
 		}
+		isdependent = false;
+		ispolicyidnull = false;
 		return eligible;
 	}
 
