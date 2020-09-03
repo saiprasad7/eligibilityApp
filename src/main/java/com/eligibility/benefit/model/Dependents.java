@@ -12,6 +12,7 @@ public class Dependents {
 	private Name dependentName;
 	private Date dependentDateOfBirth;
 	private Address dependentAddress;
+	private String dependentRelation;
 	private List<Benefit> dependentBenefits;
 	
 }

@@ -23,30 +23,55 @@ public class SubscriberService {
 	private PoliciesService policiesService;
 
 	public String addSubscribers(Subscribers subscribers) {
-
 		List<Benefit> benefitList= new ArrayList();
-		List<Benefit> allBenefitList= new ArrayList();
 		List<String> policyIdList = new ArrayList<>();
 		List <Dependents> dependentList=new ArrayList();
-		
-		Dependents dependents=new Dependents();
+		//To Generate SubscriberId
 		Random random =new Random(System.currentTimeMillis());
-		int id = 1000000000 + random.nextInt(2000000000);
+		int id = 1000000000 + random.nextInt(2000000000) & Integer.MAX_VALUE;
 		subscribers.setSubscriberId(String.valueOf(id));
+		//To check Subscriber PolicyId 
 		try {
-			String policyId = subscribers.getBenefits().get(0).getPolicyId();
-			if ((!policyId.equals("0000000001")) && (!policyId.equals("0000000002"))
-					&& (!policyId.equals("0000000003")) && (!policyId.equals("0000000004"))) {
+			if(subscribers.getBenefits().isEmpty()) {
 				throw new Exception("Invalid Policy Code");
 			}
-			} catch (Exception e) {
-				 e.printStackTrace();
-				 return e.toString();
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.toString();
+		}
+		//To add Benefits List
 		subscribers.getBenefits().stream().forEach(action -> {
 			String policyId = action.getPolicyId();
 			policyIdList.add(policyId);
 		});
+		benefitList = getPolicyList(policyIdList,subscribers);
+		subscribers.setBenefits(benefitList);
+		//To add Dependents List
+		if(!subscribers.getDependents().isEmpty()) {
+			subscribers.getDependents().stream().forEach(action -> {
+				String dependentId = null;
+				List<Benefit> allBenefitList= new ArrayList();
+				Dependents dependents=new Dependents();
+				String dependentRelation = action.getDependentRelation();
+				dependentId = generateDependentId(dependentRelation,subscribers);
+				dependents.setDependentId(dependentId);
+				dependents.setDependentDateOfBirth(action.getDependentDateOfBirth());
+				dependents.setDependentName(action.getDependentName());
+				dependents.setDependentAddress(action.getDependentAddress());
+				dependents.setDependentRelation(action.getDependentRelation());
+				List<Benefit> dependentBenefitsList = action.getDependentBenefits();
+				allBenefitList = checkDependentBenefits(dependentBenefitsList,subscribers);
+				dependents.setDependentBenefits(allBenefitList);
+				dependentList.add(dependents);
+			});
+			subscribers.setDependents(dependentList);
+		} 
+		subscriberRepository.save(subscribers);
+		return "Inserted Successfully";
+	}
+
+	public List<Benefit> getPolicyList(List<String> policyIdList,Subscribers subscribers) {
+		List<Benefit> benList= new ArrayList();
 		List<Policies> policyList = policiesService.getPolicyDetailsList(policyIdList);
 		policyList.stream().forEach(policy -> {
 			Benefit benefit=new Benefit();
@@ -57,27 +82,35 @@ public class SubscriberService {
 			benefit.setTotalEligibleAmount(policy.getClaimableAmount());
 			benefit.setClaimedAmount(subscribers.getBenefits().get(0).getClaimedAmount());
 			benefit.setCurrentEligibleAmount(subscribers.getBenefits().get(0).getCurrentEligibleAmount());
-			benefitList.add(benefit);		
+			benList.add(benefit);		
 		});
-		allBenefitList.addAll(benefitList);
-		subscribers.setBenefits(allBenefitList);
-		if(subscribers.getDependents().size() > 0) {
-			if(subscribers.getDependents().get(0).getDependentName().getFirstName().isEmpty()) {
-				dependentList.add(dependents);
-			} else {
-				String dependentId = subscribers.getSubscriberId().concat("0000000001");
-				dependents.setDependentId(dependentId);
-				dependents.setDependentDateOfBirth(subscribers.getDependents().get(0).getDependentDateOfBirth());
-				dependents.setDependentName(subscribers.getDependents().get(0).getDependentName());
-				dependents.setDependentAddress(subscribers.getDependents().get(0).getDependentAddress());
-				dependents.setDependentBenefits(benefitList);
-				dependentList.add(dependents);
-				subscribers.setDependents(dependentList);
-			}
-		} 
-		subscriberRepository.save(subscribers);
-		return "Inserted Successfully";
-		
+		return benList;
 	}
-	
+
+	public String generateDependentId(String dependentRelation,Subscribers subscribers) {
+		String dependentId = null;
+		if(dependentRelation.equalsIgnoreCase("Father")) {
+			dependentId = subscribers.getSubscriberId().concat("01");
+		} else if(dependentRelation.equalsIgnoreCase("Mother")) {
+			dependentId = subscribers.getSubscriberId().concat("02");
+		} else if(dependentRelation.equalsIgnoreCase("Spouse")) {
+			dependentId = subscribers.getSubscriberId().concat("03");
+		} else if(dependentRelation.equalsIgnoreCase("Daughter")) {
+			dependentId = subscribers.getSubscriberId().concat("04");
+		} else if(dependentRelation.equalsIgnoreCase("Son")) {
+			dependentId = subscribers.getSubscriberId().concat("05");
+		}
+		return dependentId;
+	}
+
+	public List<Benefit> checkDependentBenefits(List<Benefit> dependentBenefitsList,Subscribers subscribers) {
+		List<String> benPolicyIdList = new ArrayList<>();
+		List<Benefit> allBenList= new ArrayList();
+		dependentBenefitsList.stream().forEach(action -> {
+			String policyId = action.getPolicyId();
+			benPolicyIdList.add(policyId);
+		});
+		allBenList = getPolicyList(benPolicyIdList,subscribers);
+		return allBenList;
+	}
 }
