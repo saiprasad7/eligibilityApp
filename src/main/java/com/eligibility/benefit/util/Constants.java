@@ -8,8 +8,8 @@ public class Constants {
 	public static final int NO_CONT_CODE=400;
 	public static final String NO_CONTENT="The given policy id/Subscriberid is invalid ";
 	public static final String INVALIDSUBS="The given Subscriberid is invalid ";
-	public static final String INVALIDPOLICY="The given policy id/Dependent Id is invalid ";
+	public static final String INVALIDPOLICY="The given policy id is invalid ";
 	public static final String INVALIDDEPENDENT="The given Dependent Id is invalid ";
-	public static final int NULLCONT_CHECK=412;
+	public static final int NULLCONT_CHECK=419;
 	
 }
