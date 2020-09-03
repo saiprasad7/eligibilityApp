@@ -39,7 +39,6 @@ public class EligibilityService {
 						if (null == dependent.getDependentId() || dependent.getDependentId().isEmpty()) {
 							validatePlan(subscribers, eligible, plan, dependent);
 						} else if (dependent.getDependentId().equals(uniqueId)) {
-							System.out.println("inside depende");
 							isdependent = true;
 							dependent.getDependentBenefits().stream().forEach(dependentBenefit -> {
 
