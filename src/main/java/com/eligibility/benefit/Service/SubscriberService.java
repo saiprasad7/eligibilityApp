@@ -25,8 +25,10 @@ public class SubscriberService {
 	public String addSubscribers(Subscribers subscribers) {
 
 		List<Benefit> benefitList= new ArrayList();
+		List<Benefit> allBenefitList= new ArrayList();
+		List<String> policyIdList = new ArrayList<>();
 		List <Dependents> dependentList=new ArrayList();
-		Benefit benefit=new Benefit();
+		
 		Dependents dependents=new Dependents();
 		Random random =new Random(System.currentTimeMillis());
 		int id = 1000000000 + random.nextInt(2000000000);
@@ -41,16 +43,24 @@ public class SubscriberService {
 				 e.printStackTrace();
 				 return e.toString();
 			}
-		Policies policy=policiesService.getPolicyDetails((subscribers.getBenefits().get(0).getPolicyId()));
-		benefit.setId(policy.getId());
-		benefit.setPolicyId(policy.getPolicyId());
-		benefit.setPolicyBenefits(policy.getPolicyBenefits());
-		benefit.setPolicyName(policy.getPolicyName());
-		benefit.setTotalEligibleAmount(policy.getClaimableAmount());
-		benefit.setClaimedAmount(subscribers.getBenefits().get(0).getClaimedAmount());
-		benefit.setCurrentEligibleAmount(subscribers.getBenefits().get(0).getCurrentEligibleAmount());
-		benefitList.add(benefit);		
-		subscribers.setBenefits(benefitList);
+		subscribers.getBenefits().stream().forEach(action -> {
+			String policyId = action.getPolicyId();
+			policyIdList.add(policyId);
+		});
+		List<Policies> policyList = policiesService.getPolicyDetailsList(policyIdList);
+		policyList.stream().forEach(policy -> {
+			Benefit benefit=new Benefit();
+			benefit.setId(policy.getId());
+			benefit.setPolicyId(policy.getPolicyId());
+			benefit.setPolicyBenefits(policy.getPolicyBenefits());
+			benefit.setPolicyName(policy.getPolicyName());
+			benefit.setTotalEligibleAmount(policy.getClaimableAmount());
+			benefit.setClaimedAmount(subscribers.getBenefits().get(0).getClaimedAmount());
+			benefit.setCurrentEligibleAmount(subscribers.getBenefits().get(0).getCurrentEligibleAmount());
+			benefitList.add(benefit);		
+		});
+		allBenefitList.addAll(benefitList);
+		subscribers.setBenefits(allBenefitList);
 		if(subscribers.getDependents().size() > 0) {
 			if(subscribers.getDependents().get(0).getDependentName().getFirstName().isEmpty()) {
 				dependentList.add(dependents);

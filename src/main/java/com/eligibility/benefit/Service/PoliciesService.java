@@ -1,5 +1,6 @@
 package com.eligibility.benefit.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -29,6 +30,17 @@ public class PoliciesService {
 	public List<Policies> getAllPolicies() {
 		LoggerUtil.infoLog(logger,"call all policies in service before findAll");
 		return policyRepository.findAll();
+	}
+	
+	public List<Policies> getPolicyDetailsList(List<String> policyIdList) {
+		LoggerUtil.infoLog(logger,"get the policy id List"+policyIdList);
+		List<Policies> policyList = new ArrayList<>();
+		policyIdList.stream().forEach(policyId -> {
+			Policies policy=policyRepository.findByPolicyId(policyId);
+			policyList.add(policy);
+		});
+		LoggerUtil.infoLog(logger,"Getting policy List information");
+		return policyList;
 	}
 
 }

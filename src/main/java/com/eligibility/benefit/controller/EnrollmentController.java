@@ -48,4 +48,10 @@ public class EnrollmentController {
 		LoggerUtil.infoLog(logger,"calling getAllPolicies API");
 		return ResponseHandlingUtil.prepareResponse(policiesService.getAllPolicies());
 	}
+	
+	@GetMapping(path="/getPolicyDetailsList",produces = "application/json")
+	 public ResponseEntity<Object> getPolicyDetailsList(@RequestParam List<String> policyIdList) {
+		LoggerUtil.infoLog(logger,"calling getPolicyDetailsList API");
+		return ResponseHandlingUtil.prepareResponse(policiesService.getPolicyDetailsList(policyIdList));
+   }
 }
