@@ -34,40 +34,49 @@ public class EligibilityService {
 				Subscribers subscribers = subscriberRepository.findBySubscriberId(subscriberId);
 				log.info("Getting Eligibility info" + subscribers);
 				if (null != subscribers) {
-					subscribers.getDependents().stream().forEach(dependent -> {
-						log.info("Getting info");
-						if (null == dependent.getDependentId() || dependent.getDependentId().isEmpty()) {
-							validatePlan(subscribers, eligible, plan, dependent);
-						} else if (dependent.getDependentId().equals(uniqueId)) {
-							isdependent = true;
-							dependent.getDependentBenefits().stream().forEach(dependentBenefit -> {
+					if (null == uniqueId || uniqueId.equals("00") || uniqueId.isEmpty()
+							|| uniqueId.equals(subscriberId.concat("00"))) {
+						validatePlan(subscribers, eligible, plan, uniqueId);
+					} else {
+						for (Dependents dependent : subscribers.getDependents()) {
+							log.info("Getting info");
+							if (null == dependent.getDependentId() || dependent.getDependentId().isEmpty()) {
 
-								if (dependentBenefit.getPolicyId().equals(plan)
-										&& dependentBenefit.getCurrentEligibleAmount() > 0) {
-									ispolicyidnull = true;
-									eligible.setSubscriberId(subscribers.getSubscriberId());
-									eligible.setEligible(true);
-									eligible.setUniqueId(dependent.getDependentId());
-									eligible.setPlanCode(dependentBenefit.getPolicyId());
-									eligible.setRelationShip(subscribers.getDependents());
-									eligible.setTotalEligibleAmount(dependentBenefit.getTotalEligibleAmount());
-									eligible.setCurrentEligibleAmount(dependentBenefit.getCurrentEligibleAmount());
+								log.error("There is no dependent id for the subscriber", subscriberId);
+								return ExceptionHandlingUtil.returnErrorObject(Constants.INVALIDDEPENDENT + uniqueId,
+										Constants.PAGE_NOT_FND);
+							} else if (dependent.getDependentId().equals(uniqueId)) {
+								isdependent = true;
+								dependent.getDependentBenefits().stream().forEach(dependentBenefit -> {
 
-								} else if (dependentBenefit.getPolicyId().equals(plan)
-										&& dependentBenefit.getCurrentEligibleAmount() == 0) {
-									ispolicyidnull = true;
-									eligible.setSubscriberId(subscribers.getSubscriberId());
-									eligible.setEligible(false);
-									eligible.setUniqueId(dependent.getDependentId());
-									eligible.setPlanCode(dependentBenefit.getPolicyId());
-									eligible.setRelationShip(subscribers.getDependents());
-									eligible.setTotalEligibleAmount(dependentBenefit.getTotalEligibleAmount());
-									eligible.setCurrentEligibleAmount(dependentBenefit.getCurrentEligibleAmount());
-								}
+									if (dependentBenefit.getPolicyId().equals(plan)
+											&& dependentBenefit.getCurrentEligibleAmount() > 0) {
+										ispolicyidnull = true;
+										eligible.setSubscriberId(subscribers.getSubscriberId());
+										eligible.setEligible(true);
+										eligible.setUniqueId(dependent.getDependentId());
+										eligible.setPlanCode(dependentBenefit.getPolicyId());
+										eligible.setRelationShip(subscribers.getDependents());
+										eligible.setTotalEligibleAmount(dependentBenefit.getTotalEligibleAmount());
+										eligible.setCurrentEligibleAmount(dependentBenefit.getCurrentEligibleAmount());
 
-							});
+									} else if (dependentBenefit.getPolicyId().equals(plan)
+											&& dependentBenefit.getCurrentEligibleAmount() == 0) {
+										ispolicyidnull = true;
+										eligible.setSubscriberId(subscribers.getSubscriberId());
+										eligible.setEligible(false);
+										eligible.setUniqueId(dependent.getDependentId());
+										eligible.setPlanCode(dependentBenefit.getPolicyId());
+										eligible.setRelationShip(subscribers.getDependents());
+										eligible.setTotalEligibleAmount(dependentBenefit.getTotalEligibleAmount());
+										eligible.setCurrentEligibleAmount(dependentBenefit.getCurrentEligibleAmount());
+									}
+
+								});
+							}
 						}
-					});
+					}
+
 					if (null == eligible.getPlanCode() && !isdependent) {
 						log.info("the Given dependent id is not Matched");
 						return ExceptionHandlingUtil.returnErrorObject(Constants.INVALIDDEPENDENT + uniqueId,
@@ -99,14 +108,18 @@ public class EligibilityService {
 		return eligible;
 	}
 
-	private void validatePlan(Subscribers subscribers, EligibilityCheck eligible, String plan, Dependents dependent) {
+	private void validatePlan(Subscribers subscribers, EligibilityCheck eligible, String plan, String uniqueId) {
 		subscribers.getBenefits().stream().forEach(benefitPlan -> {
 			if (benefitPlan.getPolicyId().equals(plan) && benefitPlan.getCurrentEligibleAmount() > 0) {
 				eligible.setSubscriberId(subscribers.getSubscriberId());
 				eligible.setEligible(true);
-				eligible.setUniqueId(dependent.getDependentId());
+				eligible.setUniqueId(uniqueId);
 				eligible.setPlanCode(benefitPlan.getPolicyId());
-				eligible.setRelationShip(subscribers.getDependents());
+				if (uniqueId.equals("00")) {
+					eligible.setRelationShip(null);
+				} else {
+					eligible.setRelationShip(subscribers.getDependents());
+				}
 				eligible.setTotalEligibleAmount(benefitPlan.getTotalEligibleAmount());
 				eligible.setCurrentEligibleAmount(benefitPlan.getCurrentEligibleAmount());
 			} else {
@@ -115,4 +128,5 @@ public class EligibilityService {
 			}
 		});
 	}
+
 }
