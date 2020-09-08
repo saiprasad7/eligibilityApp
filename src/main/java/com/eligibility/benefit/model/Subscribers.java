@@ -20,6 +20,8 @@ public class Subscribers {
 	
 	private Name name;
 	
+	private Address address;
+	
 	private Date dateOfBirth;
 	
 	private List<Benefit> benefits;
