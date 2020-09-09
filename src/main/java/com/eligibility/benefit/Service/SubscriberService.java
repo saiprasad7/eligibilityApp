@@ -67,7 +67,7 @@ public class SubscriberService {
 			subscribers.setDependents(dependentList);
 		} 
 		subscriberRepository.save(subscribers);
-		return Constants.INSERTED_SUCCESSFULLY;
+		return subscribers.getSubscriberId();
 	}
 
 	public List<Benefit> getPolicyList(List<String> policyIdList,Subscribers subscribers) {
