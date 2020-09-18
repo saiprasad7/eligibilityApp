@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.eligibility.benefit.Repo.UserRepository;
+import com.eligibility.benefit.model.TokenDetails;
 import com.eligibility.benefit.model.Users;
 import com.eligibility.benefit.util.LoggerUtil;
 
@@ -82,4 +83,20 @@ public class UserService implements UserDetailsService {
 
 	}
 
+	public String updateUserInfo(TokenDetails tokenDetails) {
+		// TODO Auto-generated method stub
+		String msg = null;
+		LoggerUtil.infoLog(logger,"get the user name "+tokenDetails.getName()+tokenDetails.getToken());
+		Users dbUser=userRepository.findByName(tokenDetails.getName());
+		Users db=new Users();
+		//if(dbUser.getToken()==null) { 
+		dbUser.setToken("Bearer "+tokenDetails.getToken());
+		db=userRepository.save(dbUser);
+	//	}
+		
+		if(db!=null) {
+		msg="successfully updated";
+	}
+return msg;
+	}
 }

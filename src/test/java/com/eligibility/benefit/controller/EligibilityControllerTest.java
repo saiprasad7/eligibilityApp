@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import com.eligibility.benefit.Service.EligibilityService;
@@ -35,10 +36,10 @@ public class EligibilityControllerTest {
 	public void tearDown() throws Exception {
 		eligibilityController = null;
 	}
-
+	HttpHeaders headers = new HttpHeaders();
 	@Test
 	public void testGetBenefit() {
-		Mockito.when(eligibilityController.getBenefit("", "", "")).thenReturn(eligibilityCheck);
+		Mockito.when(eligibilityController.getBenefit(headers,"","", "")).thenReturn(eligibilityCheck);
 	}
 
 }

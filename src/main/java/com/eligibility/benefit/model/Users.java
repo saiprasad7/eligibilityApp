@@ -18,6 +18,8 @@ public class Users {
 	private String password;
 	
 	private String email;
+	
+	private String token;
 		
 
 

@@ -35,7 +35,7 @@ public class EligibilityServiceTest {
 
 	@Test
 	public void testGetEligibility() {
-		Mockito.when(eligibilityService.getEligibility("", "", "")).thenReturn(eligibilityCheck);
+		Mockito.when(eligibilityService.getEligibility("", "", "","")).thenReturn(eligibilityCheck);
 	}
 
 }

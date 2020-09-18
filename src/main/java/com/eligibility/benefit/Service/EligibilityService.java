@@ -1,13 +1,17 @@
 package com.eligibility.benefit.Service;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eligibility.benefit.Repo.SubscriberRepository;
+import com.eligibility.benefit.Repo.UserRepository;
 import com.eligibility.benefit.model.Dependents;
 import com.eligibility.benefit.model.EligibilityCheck;
 import com.eligibility.benefit.model.Subscribers;
+import com.eligibility.benefit.model.Users;
 import com.eligibility.benefit.util.Constants;
 import com.eligibility.benefit.util.ExceptionHandlingUtil;
 
@@ -19,13 +23,21 @@ public class EligibilityService {
 
 	@Autowired
 	private SubscriberRepository subscriberRepository;
+	@Autowired
+	private UserRepository userRepository;
 	boolean isdependent = false;
 	boolean ispolicyidnull = false;
 
-	public Object getEligibility(String subscriberId, String uniqueId, String plan) {
+	public Object getEligibility(String subscriberId, String uniqueId, String plan,String token) {
 		log.info("Getting Eligibility info");
 		EligibilityCheck eligible = new EligibilityCheck();
-
+		List<Users> dbUser=userRepository.findAll();
+		for(Users user:dbUser) {
+		if(user.getToken()!=null) {	
+		if(user.getToken().equals(token)) {
+			log.info("Getting Eligibility info"+token);	
+			
+		
 		if (StringUtils.isEmpty(subscriberId) || StringUtils.isEmpty(plan)) {
 			return ExceptionHandlingUtil.returnErrorObject("the given subscriber/policy is invalid",
 					Constants.NULLCONT_CHECK);
@@ -102,6 +114,11 @@ public class EligibilityService {
 			catch (Exception e) {
 				log.error("the subsciber is not eligible for the benefit", e);
 			}
+		}
+		}
+		}else {
+			return ExceptionHandlingUtil.returnErrorObject("The given token is invalid/Expired" +token, null );
+		}
 		}
 		isdependent = false;
 		ispolicyidnull = false;
