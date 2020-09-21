@@ -8,26 +8,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eligibility.benefit.Repo.SubscriberRepository;
+import com.eligibility.benefit.Repo.UserRepository;
 import com.eligibility.benefit.model.Benefit;
 import com.eligibility.benefit.model.Dependents;
 import com.eligibility.benefit.model.Policies;
 import com.eligibility.benefit.model.Subscribers;
+import com.eligibility.benefit.model.Users;
 import com.eligibility.benefit.util.Constants;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class SubscriberService {
 
 	@Autowired
 	private SubscriberRepository subscriberRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private PoliciesService policiesService;
 
-	public String addSubscribers(Subscribers subscribers) {
+	public String addSubscribers(Subscribers subscribers,String token) {
 		List<Benefit> benefitList= new ArrayList();
 		List<String> policyIdList = new ArrayList<>();
 		List <Dependents> dependentList=new ArrayList();
-		//To Generate SubscriberId
+		List<Users> dbUser=userRepository.findAll();
+		for(Users user:dbUser) {
+		if(user.getToken()!=null) {	
+		if(user.getToken().equals(token)) {
+			log.info("Getting  info"+token);	
 		Random random =new Random(System.currentTimeMillis());
 		int id = Constants.INITIAL_ID + random.nextInt(Constants.END_ID) & Integer.MAX_VALUE;
 		subscribers.setSubscriberId(String.valueOf(id));
@@ -67,6 +78,13 @@ public class SubscriberService {
 			subscribers.setDependents(dependentList);
 		} 
 		subscriberRepository.save(subscribers);
+	}
+		}
+		else {
+			subscribers.setSubscriberId(null);
+		
+		}
+		}
 		return subscribers.getSubscriberId();
 	}
 

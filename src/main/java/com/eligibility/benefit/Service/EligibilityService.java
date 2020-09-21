@@ -117,7 +117,7 @@ public class EligibilityService {
 		}
 		}
 		}else {
-			return ExceptionHandlingUtil.returnErrorObject("The given token is invalid/Expired" +token, null );
+			return ExceptionHandlingUtil.returnErrorObject("The given token is invalid/Expired" +token, Constants.PAGE_NOT_FND );
 		}
 		}
 		isdependent = false;

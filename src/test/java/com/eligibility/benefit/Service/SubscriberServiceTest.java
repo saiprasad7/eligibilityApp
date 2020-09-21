@@ -38,7 +38,7 @@ public class SubscriberServiceTest {
 
 	@Test
 	public void testAddSubscribers() {
-		Mockito.when(subscriberService.addSubscribers(subscribers)).thenReturn(Mockito.anyString());
+		Mockito.when(subscriberService.addSubscribers(subscribers,"")).thenReturn(Mockito.anyString());
 	}
 
 }

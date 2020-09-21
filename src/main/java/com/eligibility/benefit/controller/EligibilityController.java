@@ -23,7 +23,6 @@ public class EligibilityController {
 	public ResponseEntity<Object> getBenefit(@RequestHeader HttpHeaders headers,@RequestParam String subscriberId, @RequestParam String dependentId,
 			@RequestParam String policyId) {
 		List<String> token=headers.get("authorization");
-		token.get(0);
 		System.out.println("he--"+token.toString()+"----token.get(0);-"+token.get(0));
 		//System.out.println("he--"+headers.toString()+"------"+headers.get("authorization"));
 		return ResponseHandlingUtil.prepareResponse(eligibilityService.getEligibility(subscriberId, dependentId, policyId,token.get(0)));

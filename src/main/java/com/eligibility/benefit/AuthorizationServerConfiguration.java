@@ -1,6 +1,7 @@
 package com.eligibility.benefit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,22 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	
  @Autowired
 	private UserService userDetailsService;
+ 
+ @Value("${token.expired}")
+	private int expiredTime;
+ @Value("${token.scope}")
+ private String scope;
+ @Value("${token.grandtype}")
+ private String grandType;
+ 
+ @Value("${token.clientaut}")
+ private String clientauth;
+ @Value("${token.key}")
+ private String key;
+/* token.scope=all
+		 token.grandtype=password
+		 token.clientaut=eligibilitydb
+		 token.key=secret*/
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -37,14 +54,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
-				.withClient("eligibilitydb")
-				.secret(passwordEncoder.encode("secret"))
-				.authorizedGrantTypes("password","client_credentials")
-						//, "refresh_token")
-			//	.authorizedGrantTypes("password", "client_credentials", "refresh_token")
-				.scopes("all")
-				.accessTokenValiditySeconds(3600);
-				//.refreshTokenValiditySeconds(86400);
+				.withClient(clientauth)
+				.secret(passwordEncoder.encode(key))
+				.authorizedGrantTypes(grandType,"client_credentials")
+				.scopes(scope)
+				.accessTokenValiditySeconds(expiredTime);
+	
 	}
 	
 	@Override

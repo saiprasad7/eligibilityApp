@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import com.eligibility.benefit.Service.PoliciesService;
@@ -46,10 +47,10 @@ public class EnrollmentControllerTest {
 	public void tearDown() throws Exception {
 		enrollmentController = null;
 	}
-
+	HttpHeaders headers = new HttpHeaders();
 	@Test
 	public void testAddSubscriberslist() {
-		Mockito.when(enrollmentController.addSubscriberslist(subscribers)).thenReturn(Mockito.anyString());
+		Mockito.when(enrollmentController.addSubscriberslist(headers, subscribers)).thenReturn(Mockito.anyString());
 	}
 
 	@Test

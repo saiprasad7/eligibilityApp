@@ -17,86 +17,62 @@ import org.springframework.stereotype.Service;
 import com.eligibility.benefit.Repo.UserRepository;
 import com.eligibility.benefit.model.TokenDetails;
 import com.eligibility.benefit.model.Users;
-import com.eligibility.benefit.util.LoggerUtil;
 
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class UserService implements UserDetailsService {
-	
+
 	protected Logger logger = LoggerFactory.getLogger(UserService.class);
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	public Users getByUsername(String name) {
-		
-		LoggerUtil.infoLog(logger,"get the user name "+name);
-		Users dbUser=userRepository.findByName(name);
-		LoggerUtil.infoLog(logger,"Getting user information");
-		
-	/*	if (dbUser != null) {
-			Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-			
-			//for (String role : dbUser.getRoles()) {
-				GrantedAuthority authority = new SimpleGrantedAuthority(dbUser.getRoles());
-				grantedAuthorities.add(authority);
-			//}
-					
-			org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(
-					dbUser.getName(), dbUser.getPassword(), grantedAuthorities);
-			return user;
-		} else {
-			throw new UsernameNotFoundException(String.format("User '%s' not found", name));
-		}*/
-	
+
+		Users dbUser = userRepository.findByName(name);
+		log.info("Getting user information");
 		return dbUser;
-		
+
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		LoggerUtil.infoLog(logger,"get the user name "+username);
-		Users dbUser=userRepository.findByName(username);
-		LoggerUtil.infoLog(logger,"Getting user information");
+		log.info("get the user name " + username);
+		Users dbUser = userRepository.findByName(username);
+		log.info( "Getting user information");
 		dbUser.setPassword(passwordEncoder.encode(dbUser.getPassword()));
-		System.out.println("befire db user"+dbUser.getName());
-		if (dbUser != null) {
-			System.out.println("db user"+dbUser.getName());
+		if (null!=dbUser) {
+			log.info("db user" + dbUser.getName());
 			Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-			
-			//for (String role : dbUser.getRoles()) {
-				GrantedAuthority authority = new SimpleGrantedAuthority(dbUser.getName());
-				grantedAuthorities.add(authority);
-			//}
-					
+
+			GrantedAuthority authority = new SimpleGrantedAuthority(dbUser.getName());
+			grantedAuthorities.add(authority);
+
 			org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(
 					dbUser.getName(), dbUser.getPassword(), grantedAuthorities);
 			return user;
 		} else {
 			throw new UsernameNotFoundException(String.format("User '%s' not found", username));
 		}
-	
-		//return user;
 
 	}
 
 	public String updateUserInfo(TokenDetails tokenDetails) {
-		// TODO Auto-generated method stub
-		String msg = null;
-		LoggerUtil.infoLog(logger,"get the user name "+tokenDetails.getName()+tokenDetails.getToken());
-		Users dbUser=userRepository.findByName(tokenDetails.getName());
-		Users db=new Users();
-		//if(dbUser.getToken()==null) { 
-		dbUser.setToken("Bearer "+tokenDetails.getToken());
-		db=userRepository.save(dbUser);
-	//	}
-		
-		if(db!=null) {
-		msg="successfully updated";
-	}
-return msg;
+		String msg = "";
+		Users dbUser = userRepository.findByName(tokenDetails.getName());
+		Users db = new Users();
+		log.info("token"+tokenDetails.getToken());
+		dbUser.setToken("Bearer " + tokenDetails.getToken());
+		db = userRepository.save(dbUser);
+
+		if (db != null) {
+			msg = "successfully updated";
+		}
+		return msg;
 	}
 }
