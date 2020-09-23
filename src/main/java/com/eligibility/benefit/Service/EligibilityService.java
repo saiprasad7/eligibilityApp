@@ -28,16 +28,13 @@ public class EligibilityService {
 	boolean isdependent = false;
 	boolean ispolicyidnull = false;
 
-	public Object getEligibility(String subscriberId, String uniqueId, String plan,String token) {
+	public Object getEligibility(String subscriberId, String uniqueId, String plan, String token) {
 		log.info("Getting Eligibility info");
 		EligibilityCheck eligible = new EligibilityCheck();
-		List<Users> dbUser=userRepository.findAll();
-		for(Users user:dbUser) {
-		if(user.getToken()!=null) {	
-		if(user.getToken().equals(token)) {
-			log.info("Getting Eligibility info"+token);	
-			
-		
+		Users user = userRepository.findByToken(token);
+
+		log.info("Getting Eligibility info" + token);
+
 		if (StringUtils.isEmpty(subscriberId) || StringUtils.isEmpty(plan)) {
 			return ExceptionHandlingUtil.returnErrorObject("the given subscriber/policy is invalid",
 					Constants.NULLCONT_CHECK);
@@ -115,11 +112,7 @@ public class EligibilityService {
 				log.error("the subsciber is not eligible for the benefit", e);
 			}
 		}
-		}
-		}else {
-			return ExceptionHandlingUtil.returnErrorObject("The given token is invalid/Expired" +token, Constants.PAGE_NOT_FND );
-		}
-		}
+
 		isdependent = false;
 		ispolicyidnull = false;
 		return eligible;

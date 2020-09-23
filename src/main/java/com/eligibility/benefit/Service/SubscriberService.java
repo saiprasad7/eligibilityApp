@@ -34,15 +34,13 @@ public class SubscriberService {
 		List<Benefit> benefitList= new ArrayList();
 		List<String> policyIdList = new ArrayList<>();
 		List <Dependents> dependentList=new ArrayList();
-		List<Users> dbUser=userRepository.findAll();
-		for(Users user:dbUser) {
-		if(user.getToken()!=null) {	
-		if(user.getToken().equals(token)) {
+		Users dbUser=userRepository.findByToken(token);
+		if(dbUser.getToken()!=null) {	
+		if(dbUser.getToken().equals(token)) {
 			log.info("Getting  info"+token);	
 		Random random =new Random(System.currentTimeMillis());
 		int id = Constants.INITIAL_ID + random.nextInt(Constants.END_ID) & Integer.MAX_VALUE;
 		subscribers.setSubscriberId(String.valueOf(id));
-		//To check Subscriber PolicyId 
 		try {
 			if(subscribers.getBenefits().isEmpty()) {
 				throw new Exception(Constants.INVALID_POLICY_CODE);
@@ -83,7 +81,6 @@ public class SubscriberService {
 		else {
 			subscribers.setSubscriberId(null);
 		
-		}
 		}
 		return subscribers.getSubscriberId();
 	}
