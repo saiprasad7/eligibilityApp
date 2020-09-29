@@ -29,7 +29,7 @@ public class MailServices {
 		this.javaMailSender = javaMailSender;
 	}
 
-	public void sendMail(JsonNode userNode) {
+	public void sendMail(JsonNode userNode) throws Exception{
 		try {
 			log.info("Email is ready "+mailId);
 			log.info("sendMail method is start ");
