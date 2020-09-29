@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import com.eligibility.benefit.controller.UserController;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class MailServices {
 
-	protected Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired(required = true)
 	JavaMailSender javaMailSender;
@@ -29,8 +31,8 @@ public class MailServices {
 
 	public void sendMail(JsonNode userNode) {
 		try {
-			LoggerUtil.infoLog(logger,"Email is ready "+mailId);
-			LoggerUtil.infoLog(logger,"sendMail method is start ");
+			log.info("Email is ready "+mailId);
+			log.info("sendMail method is start ");
 
 			SimpleMailMessage mailMessage = new SimpleMailMessage();
 			mailMessage.setTo(userNode.get("to").asText());
@@ -38,14 +40,14 @@ public class MailServices {
 			mailMessage.setText(userNode.get("message").asText());
 			mailMessage.setFrom(mailId);
 			javaMailSender.send(mailMessage);
-			LoggerUtil.infoLog(logger,"Mail sent successfully ");
+			log.info("Mail sent successfully ");
 
 		} catch (MailAuthenticationException e) {
-			e.printStackTrace();
-			LoggerUtil.infoLog(logger,"sendMail method is error ");
+			log.error("sendMail method is error ",e);
+			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerUtil.infoLog(logger,"sendMail method is error ");
+			log.error("sendMail method is error ",e);
+			throw e;
 		}
 	}
 }

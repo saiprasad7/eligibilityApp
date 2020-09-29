@@ -48,22 +48,12 @@ public class UserController {
 	
 	@PostMapping(value = "/sendTemporaryPassword")
 	public ResponseEntity<JsonNode> sendTemporaryPassword(@RequestBody JsonNode userNode) {
-		LoggerUtil.infoLog(logger,"calling sendTemporaryPassword API");
-
+		log.info("calling sendTemporaryPassword API");
 		JsonNode responceNode = mapper.createObjectNode();
-		try {
-			responceNode = userService.sendTemporaryPassword(userNode.get("email").asText(),
-					userNode.get("userName").asText());
-			LoggerUtil.infoLog(logger,"end sendTemporaryPassword API");
-			return new ResponseEntity<JsonNode>(responceNode, HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			((ObjectNode)responceNode).put("status", false);
-			((ObjectNode)responceNode).put("data",  "Email Not send. Exception accured");
-			e.printStackTrace();
-			return new ResponseEntity<JsonNode>(responceNode, HttpStatus.NOT_FOUND);
-
-		}
+		responceNode = userService.sendTemporaryPassword(userNode.get("email").asText(),
+				userNode.get("userName").asText());
+		log.info("end sendTemporaryPassword API");
+		return new ResponseEntity<JsonNode>(responceNode, HttpStatus.OK);
 
 	}
 	

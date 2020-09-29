@@ -59,63 +59,59 @@ public class UserService implements UserDetailsService {
 	}
 
 	public JsonNode getTemporaryPassword(String tomail, String userName) {
-		LoggerUtil.infoLog(logger,"getTemporaryPassword method is started in service class");
+		log.info("getTemporaryPassword method is started in service class");
 		JsonNode userNode = mapper.createObjectNode();
 		Query query = new Query();
-		try {
-			query.addCriteria(Criteria.where("name").is(userName).and("email").is(tomail));
-			Users exitUser = mongoTemplate.findOne(query, Users.class);
-			if (exitUser != null) {
-				((ObjectNode) userNode).put("subject", "Temporary Password");
-				((ObjectNode) userNode).put("message",
-						"Hi " + userName + "  \n\n Welcome to PERFICIENT online courses. Your Temporary Password is "
-								+ exitUser.getPassword() + " \n\n Please visit this link http://localhost:8080");
-				((ObjectNode) userNode).put("link", "Please visit this link http://localhost:8080");
-				((ObjectNode) userNode).put("to", tomail);
-				LoggerUtil.infoLog(logger,"getTemporaryPassword method is End in service class");
-				return userNode;
-			} else {
-				((ObjectNode) userNode).put("subject", "Temporary Password");
-				((ObjectNode) userNode).put("message", "Hi " + userName
-						+ "  \n\n Welcome to PERFICIENT online courses. You are not registered user. Please register online course. \n\n Please visit this link http://localhost:8080");
-				((ObjectNode) userNode).put("link", "Please visit this link http://localhost:8080");
-				((ObjectNode) userNode).put("to", tomail);
-				LoggerUtil.infoLog(logger,"getTemporaryPassword method is End in service class");
-				return userNode;
-			}
-		}catch(NullPointerException e) {
-			e.printStackTrace();
-			LoggerUtil.infoLog(logger,"getTemporaryPassword is error => "+e);
-		}catch(Exception e) {
-			LoggerUtil.infoLog(logger,"getTemporaryPassword is error => "+e);
-			e.printStackTrace();
+		query.addCriteria(Criteria.where("name").is(userName).and("email").is(tomail));
+		Users exitUser = mongoTemplate.findOne(query, Users.class);
+		String 	subject = "Temporary Password";
+		String msg="";
+		String link = "Please visit this link http://localhost:8080";
+		if (exitUser != null) {
+			msg = "Hi " + userName + "  \n\n Welcome to PERFICIENT online courses. Your Temporary Password is "+ exitUser.getPassword() + " \n\n Please visit this link http://localhost:8080";
+			createMailContant(subject, msg, link, tomail,userNode);
+			log.info("getTemporaryPassword method is End in service class");
+			return userNode;
+		} else {
+			msg= "Hi " + userName + "  \n\n Welcome to PERFICIENT online courses. You are not registered user. Please register online course. \n\n Please visit this link http://localhost:8080";
+			createMailContant(subject, msg, link, tomail,userNode);
+			log.info("getTemporaryPassword method is End in service class");
+			return userNode;
 		}
-		return userNode;
 		
+	}
+
+	private void createMailContant(String subject,String msg,String link,String tomail,JsonNode userNode) {
+		((ObjectNode) userNode).put("subject", subject);
+		((ObjectNode) userNode).put("message",msg);
+		((ObjectNode) userNode).put("link", link);
+		((ObjectNode) userNode).put("to", tomail);
 	}
 
 	
 	public JsonNode sendTemporaryPassword(String toEmail, String userId) {
-		LoggerUtil.infoLog(logger,"sendTemporaryPassword is started");
+		log.info("sendTemporaryPassword is started");
 		JsonNode responceNode = mapper.createObjectNode();
 		try {
 			mailServices.sendMail(getTemporaryPassword(toEmail, userId));
-			((ObjectNode)responceNode).put("status", true);
-			((ObjectNode)responceNode).put("data",  "Email send successfully");
-			LoggerUtil.infoLog(logger,"sendTemporaryPassword is end");
+			returnStatus(responceNode,true,"Email send successfully");
+			log.info("sendTemporaryPassword is end");
 			return responceNode;
 		}catch(NullPointerException e) {
-			((ObjectNode)responceNode).put("status", false);
-			((ObjectNode)responceNode).put("data",  "Email Not send. Exception accured");
-			e.printStackTrace();
+			returnStatus(responceNode,false, "Email Not send. Exception accured");
+			log.error("Email Not send. Exception accured"+e);		
 			return responceNode;
 		}catch(Exception e) {
-			((ObjectNode)responceNode).put("status", false);
-			((ObjectNode)responceNode).put("data",  "Email Not send. Exception accured");
-			e.printStackTrace();
+			returnStatus(responceNode,false,"Email Not send. Exception accured");
+			log.error("Email Not send. Exception accured"+e);		
 			return responceNode;
 		}
 		
+	}
+
+	private void returnStatus(JsonNode responceNode,boolean status,String msg) {
+		((ObjectNode)responceNode).put("status", status);
+		((ObjectNode)responceNode).put("data",  msg);
 	}
 	
 	@Override
