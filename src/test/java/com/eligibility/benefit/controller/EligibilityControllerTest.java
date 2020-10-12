@@ -1,45 +1,47 @@
 package com.eligibility.benefit.controller;
 
-import static org.junit.Assert.*;
-
-import javax.ws.rs.core.Response;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-
 import com.eligibility.benefit.Service.EligibilityService;
 import com.eligibility.benefit.model.EligibilityCheck;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+@WebMvcTest(EligibilityController.class)
 public class EligibilityControllerTest {
-	
-	private EligibilityController eligibilityController;
-	
-	@Mock
-	private EligibilityService eligibilityService;
-	
-	@Mock
-	private ResponseEntity<Object> eligibilityCheck;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		eligibilityController = Mockito.mock(EligibilityController.class);
-	}
+    @MockBean
+    private EligibilityService eligibilityService;
 
-	@After
-	public void tearDown() throws Exception {
-		eligibilityController = null;
-	}
-	HttpHeaders headers = new HttpHeaders();
-	@Test
-	public void testGetBenefit() {
-		Mockito.when(eligibilityController.getBenefit(headers,"","", "")).thenReturn(eligibilityCheck);
-	}
+    @Test
+    void whenAllDetailsPresentShouldReturnEligibleObject() throws Exception {
+        Mockito.when(eligibilityService.getEligibility(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                                                       Mockito.anyString())).thenReturn(eligibilityCheck());
 
+        mockMvc.perform(MockMvcRequestBuilders.get("/getBenefits")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("subscriberId", "123")
+                                .param("dependentId", "123")
+                                .param("policyId", "123")
+                                .header("authorization", "Bearer token"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("{eligible: true, planCode: 123}"));
+    }
+
+    private EligibilityCheck eligibilityCheck() {
+        EligibilityCheck check = new EligibilityCheck();
+        check.setEligible(true);
+        check.setPlanCode("123");
+        return check;
+    }
 }

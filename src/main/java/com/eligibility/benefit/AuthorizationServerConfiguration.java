@@ -1,5 +1,6 @@
 package com.eligibility.benefit;
 
+import com.eligibility.benefit.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +15,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
-import com.eligibility.benefit.Service.UserService;
-
 
 @Configuration
 @EnableAuthorizationServer
@@ -26,21 +25,21 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
- @Autowired
+
+	@Autowired
 	private UserService userDetailsService;
- 
- @Value("${token.expired}")
+
+	@Value("${token.expired}")
 	private int expiredTime;
- @Value("${token.scope}")
- private String scope;
- @Value("${token.grandtype}")
- private String grandType;
- 
- @Value("${token.clientaut}")
- private String clientauth;
- @Value("${token.key}")
- private String key;
+	@Value("${token.scope}")
+	private String scope;
+	@Value("${token.grandtype}")
+	private String grandType;
+
+	@Value("${token.clientaut}")
+	private String clientauth;
+	@Value("${token.key}")
+	private String key;
 /* token.scope=all
 		 token.grandtype=password
 		 token.clientaut=eligibilitydb
@@ -56,20 +55,19 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		clients.inMemory()
 				.withClient(clientauth)
 				.secret(passwordEncoder.encode(key))
-				.authorizedGrantTypes(grandType,"client_credentials")
+				.authorizedGrantTypes(grandType, "client_credentials")
 				.scopes(scope)
 				.accessTokenValiditySeconds(expiredTime);
-	
+
 	}
-	
+
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.tokenStore(tokenStore())
-			.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
-			
+				.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
+
 	}
 
-	
 
 	@Bean
 	public TokenStore tokenStore() {

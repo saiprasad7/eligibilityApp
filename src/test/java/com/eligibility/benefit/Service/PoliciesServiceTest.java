@@ -1,51 +1,48 @@
 package com.eligibility.benefit.Service;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.eligibility.benefit.Repo.PolicyRepository;
+import com.eligibility.benefit.model.Policies;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.eligibility.benefit.Repo.PolicyRepository;
-import com.eligibility.benefit.model.Policies;
+import java.util.List;
 
 public class PoliciesServiceTest {
 
-	private PoliciesService policiesService;
-	
-	@Mock
-	private PolicyRepository policyRepository;
-	
-	@Mock
-	private Policies policy;
-	
-	@Mock
-	private List<Policies> policyList;
-	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		policiesService = Mockito.mock(PoliciesService.class);
-	}
+    private PoliciesService policiesService;
 
-	@After
-	public void tearDown() throws Exception {
-		policiesService = null;
-	}
+    @Mock
+    private PolicyRepository policyRepository;
 
-	@Test
-	public void testGetPolicyDetails() {
-		Mockito.when(policiesService.getPolicyDetails("")).thenReturn(policy);
-	}
+    @Mock
+    private Policies policy;
 
-	@Test
-	public void testGetAllPolicies() {
-		Mockito.when(policiesService.getAllPolicies()).thenReturn(policyList);
-	}
+    @Mock
+    private List<Policies> policyList;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        policiesService = Mockito.mock(PoliciesService.class);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        policiesService = null;
+    }
+
+    @Test
+    public void testGetPolicyDetails() {
+        Mockito.when(policiesService.getPolicyDetails("")).thenReturn(policy);
+    }
+
+    @Test
+    public void testGetAllPolicies() {
+        Mockito.when(policiesService.getAllPolicies()).thenReturn(policyList);
+    }
 
 }

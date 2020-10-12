@@ -1,44 +1,50 @@
 package com.eligibility.benefit.Service;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
+import com.eligibility.benefit.Repo.SubscriberRepository;
+import com.eligibility.benefit.Repo.UserRepository;
+import com.eligibility.benefit.model.Users;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.eligibility.benefit.Repo.SubscriberRepository;
-import com.eligibility.benefit.model.Subscribers;
-
+@ExtendWith(SpringExtension.class)
 public class SubscriberServiceTest {
 
-	private SubscriberService subscriberService;
-	
-	@Mock
-	private SubscriberRepository subscriberRepository;
-	
-	@Mock
-	private PoliciesService policiesService;
-	
-	@Mock
-	private Subscribers subscribers;
-	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		subscriberService = Mockito.mock(SubscriberService.class);
-	}
+    @Autowired
+    private SubscriberService subscriberService;
 
-	@After
-	public void tearDown() throws Exception {
-		subscriberService = null;
-	}
+    @MockBean
+    private SubscriberRepository subscriberRepository;
+    @MockBean
+    private UserRepository userRepository;
 
-	@Test
-	public void testAddSubscribers() {
-		Mockito.when(subscriberService.addSubscribers(subscribers,"")).thenReturn(Mockito.anyString());
-	}
+    @MockBean
+    private PoliciesService policiesService;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testAddSubscribers() {
+        Mockito.when(userRepository.findByToken("")).thenReturn(new Users());
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn("");
+    }
+
+    @TestConfiguration
+    static class SubscriberServiceTestConfig {
+        @Bean
+        public SubscriberService subscriberService() {
+            return new SubscriberService();
+        }
+    }
 
 }

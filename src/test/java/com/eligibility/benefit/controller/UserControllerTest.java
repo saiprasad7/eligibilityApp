@@ -1,45 +1,86 @@
 package com.eligibility.benefit.controller;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
-
 import com.eligibility.benefit.Service.UserService;
 import com.eligibility.benefit.model.Users;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+@WebMvcTest(UserController.class)
 public class UserControllerTest {
-	
-	private UserController userController;
-	
-	@Mock
-	private UserService userService;
-	
-	@Mock
-	private Users users;
-	
-	@Mock
-	private ResponseEntity<Object> user;
-	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		userController = Mockito.mock(UserController.class);
-	}
+    public static final String SUCCESSFULLY_UPDATED = "successfully updated";
+    public static final String USER = "user";
+    public static final String TOKEN = "token";
+    @Autowired
+    private MockMvc mockMvc;
 
-	@After
-	public void tearDown() throws Exception {
-		userController = null;
-	}
+    @MockBean
+    private UserService userService;
 
+    @Test
+    void whenUserExistsAndRequestsTokenShouldReturnToken() throws Exception {
+        Mockito.when(userService.updateUserInfo(Mockito.any())).thenReturn(SUCCESSFULLY_UPDATED);
+        String tokenDetailsString = getTokenDetailsString();
 
-	@Test
-	public void testGetUserDetails() {
-		Mockito.when(userController.getUserDetails("")).thenReturn(user);
-	}
+        mockMvc.perform(MockMvcRequestBuilders.post("/tokens")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(tokenDetailsString)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(SUCCESSFULLY_UPDATED))
+                .andReturn();
+    }
 
+    @Test
+    void whenIncorrectRequestSentShouldReturnBadRequest() throws Exception {
+        Mockito.when(userService.updateUserInfo(Mockito.any())).thenReturn("");
+        String tokenDetailsString = getIncorrectTokenDetails();
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/tokens")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(tokenDetailsString)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string(""))
+                .andReturn();
+    }
+
+    @Test
+    void whenUserExistsShouldReturnUser() throws Exception {
+        Mockito.when(userService.getByUsername(USER)).thenReturn(user());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/getUser")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("name", USER))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("{name: user, token: token, password: null, id: null," +
+                                                                        " email: null}"))
+                .andReturn();
+    }
+
+    private Users user() {
+        Users users = new Users();
+        users.setName(USER);
+        users.setToken(TOKEN);
+        return users;
+    }
+
+    private String getTokenDetailsString() {
+        return String.format("{\"token\": \"%s\", \"name\": \"%s\"}", TOKEN, USER);
+    }
+
+    private String getIncorrectTokenDetails() {
+        return String.format("{token: \"%s\"}", TOKEN);
+    }
 }
