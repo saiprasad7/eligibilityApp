@@ -2,7 +2,6 @@ package com.eligibility.benefit.Service;
 
 import com.eligibility.benefit.Repo.UserRepository;
 import com.eligibility.benefit.model.Users;
-import com.eligibility.benefit.util.MailServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

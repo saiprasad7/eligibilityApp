@@ -3,7 +3,6 @@ package com.eligibility.benefit.Service;
 import com.eligibility.benefit.Repo.UserRepository;
 import com.eligibility.benefit.model.TokenDetails;
 import com.eligibility.benefit.model.Users;
-import com.eligibility.benefit.util.MailServices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
