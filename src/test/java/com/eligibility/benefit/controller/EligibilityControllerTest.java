@@ -1,8 +1,8 @@
 package com.eligibility.benefit.controller;
 
 import com.eligibility.benefit.Service.EligibilityService;
+import com.eligibility.benefit.Service.UserService;
 import com.eligibility.benefit.model.EligibilityCheck;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = EligibilityController.class)
-@Disabled("Disabled for Integration Tests FIXME: Failing to initialize context")
 public class EligibilityControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private EligibilityService eligibilityService;
+    @MockBean
+    private UserService userService;
 
     @Test
     void whenAllDetailsPresentShouldReturnEligibleObject() throws Exception {
@@ -37,7 +38,7 @@ public class EligibilityControllerTest {
                                 .header("authorization", "Bearer token"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("{eligible: true, planCode: 123}"));
+                .andExpect(MockMvcResultMatchers.content().json("{\"planCode\":\"123\",\"eligible\":true}"));
     }
 
     private EligibilityCheck eligibilityCheck() {
