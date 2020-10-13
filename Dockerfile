@@ -8,7 +8,7 @@ RUN mkdir -p /build
 
 WORKDIR /build
 
-COPY target/*.jar app.jar
+ENV JAR_FILE=*.jar
 
 RUN chmod 777 app.jar
 
