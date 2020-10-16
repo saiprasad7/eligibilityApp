@@ -117,6 +117,9 @@
                 <configuration>
                     <excludes>
                         <exclude>com/eligibility/benefit/util/**/*</exclude>
+                        <exclude>**/*Configuration.*</exclude>
+                        <exclude>**/*Config.*</exclude>
+                        <exclude>**/*Application.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

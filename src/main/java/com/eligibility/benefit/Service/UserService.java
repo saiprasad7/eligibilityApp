@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -27,9 +25,6 @@ import java.util.Collection;
 @Service
 @Slf4j
 public class UserService implements UserDetailsService {
-
-    protected Logger logger = LoggerFactory.getLogger(UserService.class);
-
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -46,18 +41,17 @@ public class UserService implements UserDetailsService {
     private ObjectMapper mapper;
 
     public Users getByUsername(String name) {
-
         Users dbUser = userRepository.findByName(name);
         log.info("Getting user information");
         return dbUser;
 
     }
 
-    public JsonNode getTemporaryPassword(String tomail, String userName) {
+    public JsonNode getTemporaryPassword(String email, String userName) {
         log.info("getTemporaryPassword method is started in service class");
         JsonNode userNode = mapper.createObjectNode();
         Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(userName).and("email").is(tomail));
+        query.addCriteria(Criteria.where("name").is(userName).and("email").is(email));
         Users exitUser = mongoTemplate.findOne(query, Users.class);
         String subject = "Temporary Password";
         String msg = "";
@@ -65,20 +59,17 @@ public class UserService implements UserDetailsService {
         if (exitUser != null) {
             msg =
                     "Hi " + userName + "  \n\n Welcome to PERFICIENT online courses. Your Temporary Password is " + exitUser.getPassword() + " \n\n Please visit this link http://localhost:8080";
-            createMailContant(subject, msg, link, tomail, userNode);
-            log.info("getTemporaryPassword method is End in service class");
-            return userNode;
         } else {
             msg = "Hi " + userName + "  \n\n Welcome to PERFICIENT online courses. You are not registered user. " +
                     "Please register online course. \n\n Please visit this link http://localhost:8080";
-            createMailContant(subject, msg, link, tomail, userNode);
-            log.info("getTemporaryPassword method is End in service class");
-            return userNode;
         }
+        addMailContent(subject, msg, link, email, userNode);
+        log.info("getTemporaryPassword method is End in service class");
+        return userNode;
 
     }
 
-    private void createMailContant(String subject, String msg, String link, String tomail, JsonNode userNode) {
+    private void addMailContent(String subject, String msg, String link, String tomail, JsonNode userNode) {
         ((ObjectNode) userNode).put("subject", subject);
         ((ObjectNode) userNode).put("message", msg);
         ((ObjectNode) userNode).put("link", link);
@@ -91,24 +82,24 @@ public class UserService implements UserDetailsService {
         JsonNode responceNode = mapper.createObjectNode();
         try {
             mailServices.sendMail(getTemporaryPassword(toEmail, userId));
-            returnStatus(responceNode, true, "Email send successfully");
+            addReturnStatus(responceNode, true, "Email send successfully");
             log.info("sendTemporaryPassword is end");
             return responceNode;
         }
         catch (NullPointerException e) {
-            returnStatus(responceNode, false, "Email Not send. Exception accured");
+            addReturnStatus(responceNode, false, "Email Not send. Exception accured");
             log.error("Email Not send. Exception accured" + e);
             return responceNode;
         }
         catch (Exception e) {
-            returnStatus(responceNode, false, "Email Not send. Exception accured");
+            addReturnStatus(responceNode, false, "Email Not send. Exception accured");
             log.error("Email Not send. Exception accured" + e);
             return responceNode;
         }
 
     }
 
-    private void returnStatus(JsonNode responceNode, boolean status, String msg) {
+    private void addReturnStatus(JsonNode responceNode, boolean status, String msg) {
         ((ObjectNode) responceNode).put("status", status);
         ((ObjectNode) responceNode).put("data", msg);
     }
