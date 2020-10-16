@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,17 +50,44 @@ public class EligibilityServiceTest {
         Assertions.assertThat(converted.getSubscriberId()).isEqualTo(SUBSCRIBER_ID);
     }
 
+    @Test
+    void whenGetEligibilityCalledAndDependentsExistAndIsEligibleShouldReturnTrue() {
+        Mockito.when(subscriberRepository.findBySubscriberId(SUBSCRIBER_ID)).thenReturn(subscribers());
+        Object check = eligibilityService.getEligibility(SUBSCRIBER_ID, SUBSCRIBER_ID, SUBSCRIBER_ID, SUBSCRIBER_ID);
+
+        Assertions.assertThat(check).isInstanceOf(EligibilityCheck.class);
+        EligibilityCheck converted = (EligibilityCheck) check;
+
+        Assertions.assertThat(converted.getSubscriberId()).isEqualTo(SUBSCRIBER_ID);
+        Assertions.assertThat(converted.getCurrentEligibleAmount()).isEqualTo(100L);
+        Assertions.assertThat(converted.getPlanCode()).isNotNull();
+        Assertions.assertThat(converted.getRelationShip()).isNotEmpty();
+        Assertions.assertThat(converted.getRelationShip().get(0).getDependentId()).isEqualTo(SUBSCRIBER_ID);
+    }
+
     private Subscribers subscribers() {
         Subscribers subscribers = new Subscribers();
         subscribers.setSubscriberId(SUBSCRIBER_ID);
         subscribers.setBenefits(benefits());
-        subscribers.setDependents(new ArrayList<>());
+        subscribers.setDependents(Collections.singletonList(getDependent("father", SUBSCRIBER_ID)));
         subscribers.setId(SUBSCRIBER_ID);
         Name name = new Name();
         name.setFirstName("first");
         name.setLastName("last");
         subscribers.setName(name);
         return subscribers;
+    }
+
+    private Dependents getDependent(String relation, String id) {
+        Dependents dependents = new Dependents();
+        dependents.setDependentBenefits(benefits());
+        dependents.setDependentId(id);
+        Name name = new Name();
+        name.setLastName("last " + id);
+        name.setFirstName("first " + id);
+        dependents.setDependentName(name);
+        dependents.setDependentRelation(relation);
+        return dependents;
     }
 
     private Users users() {
