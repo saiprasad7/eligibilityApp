@@ -2,6 +2,9 @@ package com.eligibility.benefit.controller;
 
 import com.eligibility.benefit.Service.UserService;
 import com.eligibility.benefit.model.Users;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +70,27 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json("{name: user, token: token, password: null, id: null," +
                                                                         " email: null}"))
                 .andReturn();
+    }
+
+    @Test
+    void whenSendTemporaryPasswordIsCalledWithoutErrorShouldSendPassword() throws Exception {
+        Mockito.when(userService.sendTemporaryPassword(Mockito.anyString(), Mockito.anyString())).thenReturn(createObjectNode());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/sendTemporaryPassword")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\": \"email@email.com\", \"userName\": \"name\"}"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("{email: email@email.com, userName: name}"));
+    }
+
+    private JsonNode createObjectNode() {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("email", "email@email.com");
+        node.put("userName", "name");
+        return node;
     }
 
     private Users user() {
