@@ -1,51 +1,65 @@
 package com.eligibility.benefit.Service;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
 import com.eligibility.benefit.Repo.PolicyRepository;
 import com.eligibility.benefit.model.Policies;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@ExtendWith(MockitoExtension.class)
 public class PoliciesServiceTest {
 
-	private PoliciesService policiesService;
-	
-	@Mock
-	private PolicyRepository policyRepository;
-	
-	@Mock
-	private Policies policy;
-	
-	@Mock
-	private List<Policies> policyList;
-	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		policiesService = Mockito.mock(PoliciesService.class);
-	}
+    @InjectMocks
+    private PoliciesService policiesService;
 
-	@After
-	public void tearDown() throws Exception {
-		policiesService = null;
-	}
+    @Mock
+    private PolicyRepository policyRepository;
 
-	@Test
-	public void testGetPolicyDetails() {
-		Mockito.when(policiesService.getPolicyDetails("")).thenReturn(policy);
-	}
+    @Test
+    void whenPoliciesExistShouldRetrieveAllPolicyIds() {
+        Mockito.when(policyRepository.findAll()).thenReturn(policies());
 
-	@Test
-	public void testGetAllPolicies() {
-		Mockito.when(policiesService.getAllPolicies()).thenReturn(policyList);
-	}
+        List<Policies> foundPolicies = policiesService.getAllPolicies();
+
+        Policies policy = policies().get(0);
+        Assertions.assertThat(foundPolicies.size()).isEqualTo(1);
+        Assertions.assertThat(foundPolicies.get(0)).isEqualTo(policy);
+    }
+
+    @Test
+    void whenPolicyIdsProvidedShouldRetrieveAllDetails() {
+        Mockito.when(policyRepository.findByPolicyId("123")).thenReturn(policies().get(0));
+        Policies policy = policies().get(0);
+
+        List<Policies> found = policiesService.getPolicyDetailsList(Collections.singletonList("123"));
+
+        Assertions.assertThat(found.size()).isEqualTo(1);
+        Assertions.assertThat(found.get(0)).isEqualTo(policy);
+    }
+
+    private List<Policies> policies() {
+        List<Policies> policies = new ArrayList<>();
+        Policies policy = getPolicies();
+        policies.add(policy);
+        return policies;
+    }
+
+    private Policies getPolicies() {
+        Policies policy = new Policies();
+        policy.setPolicyName("name");
+        policy.setId("123");
+        policy.setPolicyId("123");
+        policy.setClaimableAmount(100L);
+        policy.setPolicyBenefits("benefits");
+        return policy;
+    }
 
 }
