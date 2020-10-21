@@ -37,7 +37,7 @@ jobs:
           name: app
       - name: Set Tag Name
         run: |
-          if [[ "$GITHUB_REF" == "*master*" ]]; then
+          if [[ "$GITHUB_REF" == *"master"* ]]; then
             echo "Using latest tag name"
             echo "TAG_NAME='latest'" >> $GITHUB_ENV
           else
