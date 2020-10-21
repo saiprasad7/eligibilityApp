@@ -39,7 +39,7 @@ jobs:
         run: |
           if [[ "$GITHUB_REF" == *"master"* ]]; then
             echo "Using latest tag name"
-            echo "TAG_NAME='latest'" >> $GITHUB_ENV
+            echo "TAG_NAME=latest" >> $GITHUB_ENV
           else
             echo "Using Branch Name $GITHUB_REF"
             echo "TAG_NAME=$(echo $GITHUB_REF | cut -d'/' -f 3- | tr / _)" >> $GITHUB_ENV
