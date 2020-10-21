@@ -31,6 +31,7 @@ jobs:
     needs: [ build_and_test ]
 #    if: ${{ contains(github.ref, 'master') }}
     steps:
+      - uses: actions/checkout@v2
       - name: Download jar file
         uses: actions/download-artifact@v2
         with:
