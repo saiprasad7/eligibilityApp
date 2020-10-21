@@ -3,7 +3,7 @@ name: Maven CI/CD
 on: [ push, pull_request ]
 
 jobs:
-  build_test:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
