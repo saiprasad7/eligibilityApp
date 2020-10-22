@@ -19,11 +19,15 @@ jobs:
         with:
           name: app
           path: target/*.jar
-      - name: Upload jacoco coverage report
+      - name: Save Jacoco Artifact
         uses: actions/upload-artifact@v2
         with:
           name: jacoco-report
           path: target/site/jacoco
+      - name: Upload Jacoco Report to CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          file: target/site/jacoco/jacoco.xml
 
   build-docker-image:
     name: Docker Build and Deploy
@@ -42,7 +46,7 @@ jobs:
             echo "TAG_NAME=latest" >> $GITHUB_ENV
           else
             echo "Using Branch Name $GITHUB_REF"
-            echo "TAG_NAME=$(echo $GITHUB_REF | cut -d'/' -f 3- | tr / _)" >> $GITHUB_ENV
+            echo "TAG_NAME=$(echo $GITHUB_REF | cut -d'/' -f 3- | tr /-+\ _)" >> $GITHUB_ENV
           fi
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
