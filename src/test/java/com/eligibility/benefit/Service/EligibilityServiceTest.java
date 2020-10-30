@@ -133,8 +133,16 @@ public class EligibilityServiceTest {
     	
   Object check = eligibilityService.getEligibility("11111", SUBSCRIBER_ID, SUBSCRIBER_ID, SUBSCRIBER_ID);
   Assertions.assertThat(check.toString().contains("errorCode"));
-        
     }
+    
+  @Test
+  void whenGetEligibilityCalledAndSubscriberOfEmptyDependentAndIsEligibleShouldReturnFalse() {
+	  Mockito.when(subscriberRepository.findBySubscriberId(SUBSCRIBER_ID)).thenReturn(subscribersOfDependentEmpty());
+Object check = eligibilityService.getEligibility(SUBSCRIBER_ID, SUBSCRIBER_ID, SUBSCRIBER_ID, SUBSCRIBER_ID);
+Assertions.assertThat(check.toString().contains("errorCode"));
+  }
+  //subscribersOfDependentEmpty
+    
     @Test
     void whenGetEligibilityCalledAndDependentsNotMatchedAndIsEligibleShouldReturnFalse() {
         Mockito.when(subscriberRepository.findBySubscriberId(SUBSCRIBER_ID)).thenReturn(subscriberswithoutEligibile());
@@ -234,6 +242,18 @@ public class EligibilityServiceTest {
         subscribers.setSubscriberId(policy_id);
         subscribers.setBenefits(benefits1());
         subscribers.setDependents(Collections.singletonList(getDependent("", policy_id)));
+        subscribers.setId(policy_id);
+        Name name = new Name();
+        name.setFirstName("first");
+        name.setLastName("last");
+        subscribers.setName(name);
+        return subscribers;
+    }
+    private Subscribers subscribersOfDependentEmpty() {
+        Subscribers subscribers = new Subscribers();
+        subscribers.setSubscriberId(policy_id);
+        subscribers.setBenefits(benefits());
+        subscribers.setDependents(Collections.singletonList(getDependent("", "")));
         subscribers.setId(policy_id);
         Name name = new Name();
         name.setFirstName("first");
