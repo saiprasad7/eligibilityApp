@@ -27,18 +27,19 @@ public class EligibilityControllerTest {
     @Test
     void whenAllDetailsPresentShouldReturnEligibleObject() throws Exception {
         Mockito.when(eligibilityService.getEligibility(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-                                                       Mockito.anyString())).thenReturn(eligibilityCheck());
+                                                       Mockito.anyString())).thenReturn(eeligibilityCheck());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/getBenefits")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("subscriberId", "123")
-                                .param("dependentId", "123")
-                                .param("policyId", "123")
+                                .param("subscriberId", "")
+                                .param("dependentId", "")
+                                .param("policyId", "")
                                 .header("authorization", "Bearer token"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("{\"planCode\":\"123\",\"eligible\":true}"));
+             //   .andExpect(MockMvcResultMatchers.content().json("{\"planCode\":\"123\",\"eligible\":true}"));
+                .andExpect(MockMvcResultMatchers.content().json("{\"planCode\":\"\",\"eligible\":false}"));
     }
 
     private EligibilityCheck eligibilityCheck() {
@@ -46,5 +47,29 @@ public class EligibilityControllerTest {
         check.setEligible(true);
         check.setPlanCode("123");
         return check;
+    }
+    private EligibilityCheck eeligibilityCheck() {
+        EligibilityCheck check = new EligibilityCheck();
+        check.setEligible(false);
+        check.setPlanCode("");
+        return check;
+    }
+    @Test
+    void whenDetailsPlan_SubscriberEmptyShouldReturnEligibleObject() throws Exception {
+        Mockito.when(eligibilityService.getEligibility(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                                                       Mockito.anyString())).thenReturn(eeligibilityCheck());
+        //.thenReturn(eligibilityCheck());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/getBenefits")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("subscriberId", "")
+                                .param("dependentId", "")
+                                .param("policyId", "")
+                                .header("authorization", "Bearer token"))
+                .andDo(MockMvcResultHandlers.print())
+                //.andExpect(MockMvcResultMatchers.status().o())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("{\"planCode\":\"\",\"eligible\":false}"));
     }
 }

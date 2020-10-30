@@ -37,7 +37,7 @@ public class EligibilityService {
 
 		if (StringUtils.isEmpty(subscriberId) || StringUtils.isEmpty(plan)) {
 			return ExceptionHandlingUtil.returnErrorObject("the given subscriber/policy is invalid",
-					Constants.NULLCONT_CHECK);
+					Constants.CONT_CODE);
 		} else {
 			try {
 				Subscribers subscribers = subscriberRepository.findBySubscriberId(subscriberId);
